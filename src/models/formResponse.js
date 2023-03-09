@@ -1,29 +1,30 @@
 'use strict';
 import { Model } from 'sequelize';
+
 export default (sequelize, DataTypes) => {
-  class Form extends Model {
+  class FormResponse extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Form.hasMany(models.FormResponse, {
+      FormResponse.belongsTo(models.Form, {
         foreignKey: 'form_id',
         onDelete: 'CASCADE',
       });
     }
   }
-  Form.init(
+  FormResponse.init(
     {
-      name: DataTypes.STRING,
-      schema: DataTypes.JSON,
+      form_id: DataTypes.INTEGER,
+      response: DataTypes.JSON,
     },
     {
       sequelize,
-      modelName: 'Form',
+      modelName: 'FormResponse',
       timestamps: false,
     }
   );
-  return Form;
+  return FormResponse;
 };

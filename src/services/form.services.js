@@ -6,13 +6,13 @@ export async function createForm(name, schema) {
   return form;
 }
 
-// TODO: add number of instances
+// TODO: add number of Form Responses
 export async function getForms() {
   const allForms = await db.Form.findAll();
   return allForms;
 }
 
-// TODO: update only if no instances
+// TODO: update schema only if no instances
 export async function editForm(id, name, schema) {
   const form = await db.Form.findOne({ where: { id } });
   if (!form) {
