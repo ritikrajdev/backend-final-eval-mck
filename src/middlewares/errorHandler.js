@@ -8,7 +8,7 @@ export function handleErrors(err, req, res, next) {
     return next(err);
   }
 
-  // console.error(err);
+  console.error(err);
   switch (err.constructor) {
     case joi.ValidationError:
     case sequelize.UniqueConstraintError:

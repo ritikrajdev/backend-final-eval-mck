@@ -21,6 +21,7 @@ app.use(
     origin: CORS_ORIGIN,
   })
 );
+app.use(express.json());
 
 app.use('', routes);
 

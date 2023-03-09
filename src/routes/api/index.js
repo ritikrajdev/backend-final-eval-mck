@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import apiRoutes from './api/index.js';
+import formRoutes from './form.js';
 
 const router = Router();
 
-router.use('/api', apiRoutes);
+router.use('/forms', formRoutes);
 
 export default router;
