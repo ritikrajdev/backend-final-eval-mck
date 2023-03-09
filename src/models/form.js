@@ -9,8 +9,8 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       Form.hasMany(models.FormResponse, {
+        as: 'formResponses',
         foreignKey: 'form_id',
-        onDelete: 'CASCADE',
       });
     }
   }

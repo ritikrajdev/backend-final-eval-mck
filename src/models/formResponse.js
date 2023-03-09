@@ -11,7 +11,7 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       FormResponse.belongsTo(models.Form, {
         foreignKey: 'form_id',
-        onDelete: 'CASCADE',
+        as: 'form',
       });
     }
   }
