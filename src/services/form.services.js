@@ -1,13 +1,15 @@
+import isJsonEqual from 'lodash.isequal';
 import { HttpError, NotFoundError } from '../../errors.js';
 import db from '../models/index.js';
 
-export async function createForm(name, schema) {
-  const form = await db.Form.create({ name, schema });
+export async function createForm(name, schema, userId) {
+  const form = await db.Form.create({ name, schema, userId });
   return form;
 }
 
-export async function getForms() {
+export async function getForms(userId) {
   const allForms = await db.Form.findAll({
+    where: { userId },
     include: {
       model: db.FormResponse,
       as: 'formResponses',
@@ -17,9 +19,9 @@ export async function getForms() {
   return allForms;
 }
 
-export async function editForm(id, name, schema) {
+export async function editForm(id, name, schema, userId) {
   const form = await db.Form.findOne({
-    where: { id },
+    where: { id, userId },
     include: {
       model: db.FormResponse,
       as: 'formResponses',
@@ -30,10 +32,7 @@ export async function editForm(id, name, schema) {
     throw new NotFoundError('Form not found');
   }
 
-  if (
-    form.formResponses.length > 0 &&
-    JSON.stringify(schema) !== JSON.stringify(form.schema)
-  ) {
+  if (form.formResponses.length > 0 && !isJsonEqual(schema, form.schema)) {
     // check if only one new key is added to schema or only one is removed then update schema and also the response from FormResponse
     // else throw error
 
@@ -50,10 +49,7 @@ export async function editForm(id, name, schema) {
 
       const newKey = newKeys[0];
 
-      if (
-        JSON.stringify({ ...form.schema, [newKey]: schema[newKey] }) !==
-        JSON.stringify(schema)
-      ) {
+      if (!isJsonEqual({ ...form.schema, [newKey]: schema[newKey] }, schema)) {
         throw new HttpError('Cannot update schema of form with responses', 400);
       }
 
@@ -76,8 +72,10 @@ export async function editForm(id, name, schema) {
       const deletedKey = deletedKeys[0];
 
       if (
-        JSON.stringify({ ...schema, [deletedKey]: form.schema[deletedKey] }) !==
-        JSON.stringify(form.schema)
+        !isJsonEqual(
+          { ...schema, [deletedKey]: form.schema[deletedKey] },
+          form.schema
+        )
       ) {
         throw new HttpError('Cannot update schema of form with responses', 400);
       }
@@ -100,8 +98,8 @@ export async function editForm(id, name, schema) {
   return form;
 }
 
-export async function deleteForm(id) {
-  const form = await db.Form.findOne({ where: { id } });
+export async function deleteForm(id, userId) {
+  const form = await db.Form.findOne({ where: { id, userId } });
   if (!form) {
     throw new NotFoundError('Form not found');
   }

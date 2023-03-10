@@ -18,6 +18,7 @@ export default (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       schema: DataTypes.JSON,
+      userId: DataTypes.INTEGER,
     },
     {
       sequelize,

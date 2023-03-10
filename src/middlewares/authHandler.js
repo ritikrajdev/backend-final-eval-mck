@@ -32,8 +32,8 @@ export async function handleAuth(req, res, next) {
   }
 
   req.user = {
-    id: validTokenData.id,
-    email: validTokenData.email,
+    id: validatedTokenData.id,
+    email: validatedTokenData.email,
   };
 
   next();
